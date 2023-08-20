@@ -30,7 +30,7 @@ import store from "./store";
 //componen imports
 import mainTopBar from "./components/main-topBar.vue";
 import mainFooter from "./components/main-footer.vue";
-import mainNotifs from './components/main-notifs.vue';
+import mainNotifs from "./components/main-notifs.vue";
 
 export default {
   //components
@@ -38,6 +38,7 @@ export default {
   //Initialization of main app first request
   mounted() {
     this.refreshEventData();
+    this.fetchUserSettings();
   },
   methods: {
     //main dataLoad
@@ -61,8 +62,10 @@ export default {
 
           //set initial month name
           store.state.selectedMonthName = eventDataSource.nextMonths[0].month;
-          store.state.selectedMonthNameLong = eventDataSource.nextMonths[0].monthName;
-          store.state.selectedMonthNumber = eventDataSource.nextMonths[0].monthNumber;
+          store.state.selectedMonthNameLong =
+            eventDataSource.nextMonths[0].monthName;
+          store.state.selectedMonthNumber =
+            eventDataSource.nextMonths[0].monthNumber;
 
           //call check filter
           store.state.checkFilter = true;
@@ -75,101 +78,145 @@ export default {
         });
     },
 
+    //fetch user settings
+    async fetchUserSettings() {
+      await axios
+        .post("https://ashypls.com/eventsbooking/data/userSettings", {
+          contentType: "application/json",
+        })
+        .then((response) => {
+          if (response.data.d != null) {
+            store.state.userSettings = JSON.parse(
+              JSON.parse(response.data.d)[0]
+            );
+            //update the filters/displays
+            store.state.pagingPageSize = store.state.userSettings.pageSize;
+            store.state.viewMode = store.state.userSettings.viewMode;
+          }
+        });
+    },
+
+    //refresh user settings
+    async syncUserSettings() {
+      await axios.post("https://ashypls.com/eventsbooking/data/syncSettings", {
+        contentType: "application/json",
+        settingsJson: JSON.stringify(store.state.userSettings),
+      });
+    },
+
     //calendar load
-    async loadCalendarView(){
+    async loadCalendarView() {
       let monthNumber = store.state.selectedMonthNumber;
 
-      await axios.post("https://ashypls.com/eventsbooking/data/evsCalendarView",{
-        contentType:'application/json',
-        month:monthNumber
-      }).then(
-        response => {
+      await axios
+        .post("https://ashypls.com/eventsbooking/data/evsCalendarView", {
+          contentType: "application/json",
+          month: monthNumber,
+        })
+        .then((response) => {
           store.state.calenderView = JSON.parse(response.data.d);
-        }
-      )
-
-
-    }
+        });
+    },
   },
   watch: {
-      "$store.state.checkFilter": function () {
-        //rebind the list only if the checkFilter has been updated
-        if(this.$store.state.checkFilter == false){return}
-        //clear view
-        this.$store.state.eventView = [];
-        this.$store.state.pagedView = [];
-        //rebind
-        this.$store.state.curEvents.forEach(event =>{
-          //flag to decide if we can push this event to the view or not
-          let canPushEvent = true;
+    "$store.state.checkFilter": function () {
+      //rebind the list only if the checkFilter has been updated
+      if (this.$store.state.checkFilter == false) {
+        return;
+      }
+      //clear view
+      this.$store.state.eventView = [];
+      this.$store.state.pagedView = [];
+      //rebind
+      this.$store.state.curEvents.forEach((event) => {
+        //flag to decide if we can push this event to the view or not
+        let canPushEvent = true;
 
-          //check searching
-          if(this.$store.state.searchTerm != null){
-            //the event title must contain this text in order to be pushed to the view
-            if(!event.event_title.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())){
-              canPushEvent = false;
-            }
-          }
-
-          //month check
-          //the event_month_name must contain the selected month in order to be pushed to the view
-          if(!event.event_month_name.toLowerCase().includes(this.$store.state.selectedMonthName.toLowerCase())){
+        //check searching
+        if (this.$store.state.searchTerm != null) {
+          //the event title must contain this text in order to be pushed to the view
+          if (
+            !event.event_title
+              .toLowerCase()
+              .includes(this.$store.state.searchTerm.toLowerCase())
+          ) {
             canPushEvent = false;
           }
-
-          //facilitators check
-          this.$store.state.facilitatorList.forEach(facilitator =>{
-            if (event.facilitator_name == facilitator.facilitator_name && facilitator.checked == false){
-              canPushEvent = false;
-            }
-          })
-
-          //venues check
-          this.$store.state.venueList.forEach(venue =>{
-            if (event.venue_name == venue.venue_name && venue.checked == false){
-              canPushEvent = false;
-            }
-          })
-
-          //categories check
-          this.$store.state.categoryList.forEach(category =>{
-            if (event.category_name == category.category_name && category.checked == false){
-              canPushEvent = false;
-            }
-          })
-
-
-          //check and push
-          if(canPushEvent){this.$store.state.eventView.push(event)}
-          
-        })
-
-        //paging checks
-        let viewItemCount = this.$store.state.eventView.length;
-        let pageSize = this.$store.state.pagingPageSize;
-        let currentPage = this.$store.state.pagingCurrentPage;
-
-        //calculate page buttons
-        this.$store.state.pagingTotalPages = Math.ceil(viewItemCount / pageSize );
-
-        //paging binding
-        let startIndex = currentPage * pageSize - pageSize;
-        let endIndex = currentPage * pageSize;
-        
-        for(let i = startIndex; i < endIndex; i++){
-          if(this.$store.state.eventView[i]){
-              this.$store.state.pagedView.push(this.$store.state.eventView[i])
-          }
-        
         }
 
-        //clear the watch
-        this.$store.state.checkFilter = false;
-      },
-      "$store.state.selectedMonthNumber" : function() {
-        this.loadCalendarView();
+        //month check
+        //the event_month_name must contain the selected month in order to be pushed to the view
+        if (
+          !event.event_month_name
+            .toLowerCase()
+            .includes(this.$store.state.selectedMonthName.toLowerCase())
+        ) {
+          canPushEvent = false;
+        }
+
+        //facilitators check
+        this.$store.state.facilitatorList.forEach((facilitator) => {
+          if (
+            event.facilitator_name == facilitator.facilitator_name &&
+            facilitator.checked == false
+          ) {
+            canPushEvent = false;
+          }
+        });
+
+        //venues check
+        this.$store.state.venueList.forEach((venue) => {
+          if (event.venue_name == venue.venue_name && venue.checked == false) {
+            canPushEvent = false;
+          }
+        });
+
+        //categories check
+        this.$store.state.categoryList.forEach((category) => {
+          if (
+            event.category_name == category.category_name &&
+            category.checked == false
+          ) {
+            canPushEvent = false;
+          }
+        });
+
+        //check and push
+        if (canPushEvent) {
+          this.$store.state.eventView.push(event);
+        }
+      });
+
+      //paging checks
+      let viewItemCount = this.$store.state.eventView.length;
+      let pageSize = this.$store.state.pagingPageSize;
+      let currentPage = this.$store.state.pagingCurrentPage;
+
+      //calculate page buttons
+      this.$store.state.pagingTotalPages = Math.ceil(viewItemCount / pageSize);
+
+      //paging binding
+      let startIndex = currentPage * pageSize - pageSize;
+      let endIndex = currentPage * pageSize;
+
+      for (let i = startIndex; i < endIndex; i++) {
+        if (this.$store.state.eventView[i]) {
+          this.$store.state.pagedView.push(this.$store.state.eventView[i]);
+        }
       }
+
+      //clear the watch
+      this.$store.state.checkFilter = false;
+
+      //sync the user settings
+      this.$store.state.userSettings.viewMode = this.$store.state.viewMode;
+      this.$store.state.userSettings.pageSize = this.$store.state.pagingPageSize;
+      this.syncUserSettings();
     },
+    "$store.state.selectedMonthNumber": function () {
+      this.loadCalendarView();
+    },
+  },
 };
 </script>
 

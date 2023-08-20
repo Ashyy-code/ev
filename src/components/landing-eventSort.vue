@@ -2,7 +2,7 @@
   <div class="events-sorter-wrap">
     <div class="page-size fr">
       <label for="inp_page_size">Items per page</label>
-      <select id="inp_page_size" @change="updatePageSize($event.target)">
+      <select id="inp_page_size" @change="updatePageSize($event.target)" v-model="this.$store.state.pagingPageSize">
         <option>5</option>
         <option>10</option>
         <option>15</option>
@@ -20,15 +20,15 @@
     <div class="view-mode fr">
       <button 
       :selected="this.$store.state.viewMode == 'calendar'"
-      @click="this.$store.state.viewMode = 'calendar'"
+      @click="this.$store.state.viewMode = 'calendar'; this.$store.state.checkFilter = true"
       ><i class="fas fa-calendar"></i></button>
       <button 
       :selected="this.$store.state.viewMode == 'grid'"
-      @click="this.$store.state.viewMode = 'grid'"
+      @click="this.$store.state.viewMode = 'grid'; this.$store.state.checkFilter = true"
       ><i class="fas fa-border-all"></i></button>
       <button 
       :selected="this.$store.state.viewMode == 'list'"
-      @click="this.$store.state.viewMode = 'list'"
+      @click="this.$store.state.viewMode = 'list'; this.$store.state.checkFilter = true"
       ><i class="fas fa-list-ul"></i></button>
     </div>
   </div>

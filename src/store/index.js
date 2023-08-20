@@ -37,6 +37,7 @@ export default createStore({
             nextMonths:[],
             calenderView:[],
             userSignups:[],
+            userSettings:[],
         }
     }
 })
