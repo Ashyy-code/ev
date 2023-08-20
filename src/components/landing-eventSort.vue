@@ -57,6 +57,7 @@ export default {
   display:flex;
   justify-content: center;
   align-items: center;
+  margin-bottom:.5rem;
 }
 
 .page-size{
