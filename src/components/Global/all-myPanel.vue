@@ -22,19 +22,19 @@ export default {
       items: [
         {
           name: "My Event History",
-          desc: "View your previous events and certificates",
+          desc: "View your previous events",
           icon: "fas fa-history",
           push:'/history'
         },
         {
           name: "CPD Staff Intranet",
-          desc: "Visit the CPD pages on the staff intranet for the latest news and updates",
+          desc: "News and Updates on Staffnet",
           icon: "fas fa-sitemap",
           push:'/intranet'
         },
         {
           name: "Leave Feedback",
-          desc: "Leave some feedback about an event, request an event, or just say Hi!",
+          desc: "Help us to improve our service",
           icon: "fas fa-lightbulb",
           push: '/feedback'
         },

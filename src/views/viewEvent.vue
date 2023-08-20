@@ -64,7 +64,7 @@
 import axios from "axios";
 import store from "../store";
 //component imports
-import allMyPanel from "../components/all-myPanel.vue";
+import allMyPanel from "../components/Global/all-myPanel.vue";
 
 export default {
   //components

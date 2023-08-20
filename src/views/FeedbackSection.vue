@@ -1,26 +1,27 @@
 <template>
   <div class="feeback-wrap mainwrap">
     <div class="col-set">
-        <div class="lcol">
-            <allMyPanelVue />
-            <feedbackHistory />
-        </div>
-        <div class="rcol">
-            Here you can see your events that need feedbacking lol
-        </div>
+      <div class="lcol">
+        [Make button lol]
+        <allMyPanelVue />
+        <feedbackHistory />
+      </div>
+      <div class="rcol">
+        <feedbackRequired />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import allMyPanelVue from '../components/all-myPanel.vue'
-import feedbackHistory from '../components/feedback-history.vue';
+import allMyPanelVue from "../components/Global/all-myPanel.vue";
+import feedbackHistory from "../components/Feedback/feedback-history.vue";
+import feedbackRequired from "../components/Feedback/feedback-required.vue";
 
 export default {
-    components:{allMyPanelVue,feedbackHistory}
-}
+  components: { allMyPanelVue, feedbackHistory, feedbackRequired },
+};
 </script>
 
 <style>
-
 </style>

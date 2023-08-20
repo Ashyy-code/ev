@@ -21,12 +21,12 @@
 
 <script>
 //component imports
-import landingMonthPicker from "../components/landing-monthPicker.vue";
-import landingSearch from "../components/landing-search.vue";
-import landingFilter from "../components/landing-filter.vue";
-import allMyPanel from "../components/all-myPanel.vue";
-import eventsSort from "../components/landing-eventSort.vue";
-import landingEventList from "../components/landing-eventList.vue";
+import landingMonthPicker from "../components/Landing/landing-monthPicker.vue";
+import landingSearch from "../components/Landing/landing-search.vue";
+import landingFilter from "../components/Landing/landing-filter.vue";
+import allMyPanel from "../components/Global/all-myPanel.vue";
+import eventsSort from "../components/Landing/landing-eventSort.vue";
+import landingEventList from "../components/Landing/landing-eventList.vue";
 
 export default {
   //components

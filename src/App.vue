@@ -28,9 +28,9 @@ import axios from "axios";
 import store from "./store";
 
 //componen imports
-import mainTopBar from "./components/main-topBar.vue";
-import mainFooter from "./components/main-footer.vue";
-import mainNotifs from "./components/main-notifs.vue";
+import mainTopBar from "./components/Main/main-topBar.vue";
+import mainFooter from "./components/Main/main-footer.vue";
+import mainNotifs from "./components/Main/main-notifs.vue";
 
 export default {
   //components

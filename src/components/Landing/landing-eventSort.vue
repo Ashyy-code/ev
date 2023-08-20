@@ -43,6 +43,7 @@ export default {
       if (intValue == 'All'){intValue = 99999}
       //set
       this.$store.state.pagingPageSize = intValue;
+      this.$store.state.pagingCurrentPage = 1;
       //refresh
       this.$store.state.checkFilter = true;
     }

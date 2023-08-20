@@ -37,9 +37,9 @@
 
 <script>
 //component imports
-import eventListCalendar from './eventList-Calendar.vue';
-import eventListGrid from './eventList-Grid.vue';
-import eventListList from './eventList-List.vue';
+import eventListCalendar from '../EventsList/eventList-Calendar.vue';
+import eventListGrid from '../EventsList/eventList-Grid.vue';
+import eventListList from '../EventsList/eventList-List.vue';
 
 export default {
   components:{eventListCalendar,eventListGrid,eventListList},
