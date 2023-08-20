@@ -59,6 +59,7 @@ export default {
           store.state.curUser = eventDataSource.logged_on_user;
           store.state.nextMonths = eventDataSource.nextMonths;
           store.state.userSignups = eventDataSource.userSignups;
+          store.state.userFeedbackHistory = eventDataSource.userFeedbackHistory;
 
           //set initial month name
           store.state.selectedMonthName = eventDataSource.nextMonths[0].month;

@@ -38,6 +38,7 @@ export default createStore({
             calenderView:[],
             userSignups:[],
             userSettings:[],
+            userFeedbackHistory:[],
         }
     }
 })
