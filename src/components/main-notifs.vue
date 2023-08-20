@@ -11,8 +11,8 @@ export default {
 
     data(){
         return{
-            popupVis:true,
-            showFeedbackPopup:true,
+            popupVis:false,
+            showFeedbackPopup:false,
         }
     }
 
