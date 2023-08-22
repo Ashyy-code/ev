@@ -1,7 +1,7 @@
 <template>
   <div class="fb-recent">
     <div class="title fr">
-      <i class="fas fa-check"></i><span>Awaiting Your Feedback</span>
+      <i class="fas fa-check"></i><span>Feedback on your previous Events</span>
     </div>
     
     <div v-for="event in feedbackreqs" :key="event.event_id" class="fb-event">

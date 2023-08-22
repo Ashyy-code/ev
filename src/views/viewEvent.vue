@@ -5,9 +5,7 @@
     <div class="col-set">
       <!--side menu-->
       <div class="lcol">
-        <button @click="this.$router.push('/')">
-          <i class="fas fa-angle-left"></i><span>Back to All Events</span>
-        </button>
+        <backButton />
         <allMyPanel />
       </div>
       <!--main section-->
@@ -65,11 +63,13 @@ import axios from "axios";
 import store from "../store";
 //component imports
 import allMyPanel from "../components/Global/all-myPanel.vue";
+import backButton from "../components/Global/back-button.vue";
 
 export default {
   //components
   components: {
     allMyPanel,
+    backButton
   },
   mounted() {
     //console.log(this.$route.params.id)
@@ -98,22 +98,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.lcol button {
-  background: var(--nc-teal);
-  display: flex;
-  gap: 0.5rem;
-  color: white;
-  justify-content: center;
-  text-transform: uppercase;
-  padding: 1rem;
-  font-size: 130%;
-  align-items: center;
 
-  i {
-    font-size: 130%;
-    padding-top: 5px;
-  }
-}
 .event-view-wrapper {
   background: var(--nc-grey-light);
 

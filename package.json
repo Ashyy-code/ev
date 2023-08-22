@@ -9,6 +9,8 @@
     "host": "vite --host"
   },
   "dependencies": {
+    "@formkit/themes": "^0.18.3",
+    "@formkit/vue": "^0.18.3",
     "axios": "^1.4.0",
     "sass": "^1.63.6",
     "vue": "^3.3.4",
