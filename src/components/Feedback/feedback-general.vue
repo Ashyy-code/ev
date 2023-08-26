@@ -2,22 +2,32 @@
   <div class="feedback-general-wrap">
     <div class="title fr">
       <i class="fas fa-comment"></i>
-      <span>General Feedback or Comments</span>
+      <span>Leave new comment / feedback</span>
     </div>
-    <div class="form">
-      <span
-        ><FormKit type="text" label="Your Name (Leave blank for annoymous)"
-      /></span>
-      <span
-        ><FormKit
-          type="select"
-          label="Comments are related to:"
-          :options="feedbackTypes"
-        ></FormKit>
-      </span>
-      <span><FormKit type="textarea" label="Leave us a comment" /></span>
-      <span><FormKit type="button" label="Submit Feedback" /></span>
-    </div>
+    <form v-on:submit.prevent="onSubmit" class="form">
+      <div class="field">
+        <label for="fb_inp_name">Your Name (Leave blank for anonymous)</label>
+        <input id="fb_inp_name" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="Type of feedback"></label>
+        <select>
+          <option v-for="option in feedbackTypes" :key="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fb_inp_comments">Your Feeback / Comments</label>
+        <textarea id="fb_inp_comments" cols="30" rows="10"></textarea>
+      </div>
+
+      <div class="field">
+        <button>Submit Feedback</button>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -37,6 +47,8 @@ export default {
 
 <style lang="scss" scoped>
 .feedback-general-wrap {
+  flex-grow:1;
+
   .title {
     font-size: 140%;
     padding: 0.5rem;
@@ -44,9 +56,32 @@ export default {
   }
 
   .form {
-    background: white;
-    padding:1rem;
-    border:solid 5px var(--nc-grey-light);
+    background: var(--nc-white);
+    padding: 1rem;
+    border: solid 5px var(--nc-white-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      input,
+      select,
+      textarea {
+        border: solid 2px var(--nc-grey-light);
+        padding: 0.75rem;
+        font-size: 100%;
+      }
+
+      button {
+        width: min-content;
+        white-space: nowrap;
+        margin: 0 auto;
+      }
+    }
   }
 }
 </style>

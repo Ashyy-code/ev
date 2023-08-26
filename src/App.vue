@@ -58,8 +58,12 @@ export default {
           store.state.facilitatorList = eventDataSource.facilitators;
           store.state.curUser = eventDataSource.logged_on_user;
           store.state.nextMonths = eventDataSource.nextMonths;
-          store.state.userSignups = eventDataSource.userSignups;
-          store.state.userFeedbackHistory = eventDataSource.userFeedbackHistory;
+
+          this.populatedFeedbackHistory(
+            eventDataSource.userSignups
+          );
+
+          store.state.userGeneralFeedback = eventDataSource.userFeedbackHistory;
 
           //set initial month name
           store.state.selectedMonthName = eventDataSource.nextMonths[0].month;
@@ -117,6 +121,49 @@ export default {
         .then((response) => {
           store.state.calenderView = JSON.parse(response.data.d);
         });
+    },
+
+    populatedFeedbackHistory(signups) {
+      let _userSignupsHistory = [];
+      let _userSignupsFuture = [];
+      let _feedback = [];
+      let _feedback_req = [];
+
+      signups.forEach((signup) => {
+
+        //previous signups WITH feedback
+        if (signup.feedback_id && signup.historical == "True") {
+          _feedback.push(signup);
+        }
+
+        //check previous
+        if (signup.historical == "True") {
+          _userSignupsHistory.push(signup);
+        } else {
+          _userSignupsFuture.push(signup);
+        }
+
+        //previous events WITHOUT feedback
+        if (!signup.feedback_id && signup.historical == 'True'){
+          _feedback_req.push(signup);
+        }
+
+      });
+
+
+
+      store.state.userSignupHistory = _userSignupsHistory;
+      store.state.userSignupFuture = _userSignupsFuture;
+      store.state.userFeedbackHistory = _feedback;
+      store.state.userFeedbackRequired = _feedback_req;
+
+      // console.log(_userSignupsHistory);
+      // console.log(_userSignupsFuture);
+      // console.log(_feedback);
+      // console.log(_feedback_req);
+
+      //store.state.userSignups =
+      //store.state.userFeedbackHistory =
     },
   },
   watch: {
@@ -211,7 +258,8 @@ export default {
 
       //sync the user settings
       this.$store.state.userSettings.viewMode = this.$store.state.viewMode;
-      this.$store.state.userSettings.pageSize = this.$store.state.pagingPageSize;
+      this.$store.state.userSettings.pageSize =
+        this.$store.state.pagingPageSize;
       this.syncUserSettings();
     },
     "$store.state.selectedMonthNumber": function () {

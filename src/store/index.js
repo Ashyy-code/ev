@@ -36,9 +36,16 @@ export default createStore({
             categoryList:[],
             nextMonths:[],
             calenderView:[],
-            userSignups:[],
             userSettings:[],
+            
+            //Signups/Feedback
+            userSignups:[],
+            userSignupHistory:[],
+            userSignupFuture:[],
             userFeedbackHistory:[],
+            userFeedbackRequired:[],
+            userGeneralFeedback:[],
+
         }
     }
 })

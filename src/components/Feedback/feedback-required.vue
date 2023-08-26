@@ -4,7 +4,7 @@
       <i class="fas fa-check"></i><span>Feedback on your previous Events</span>
     </div>
     
-    <div v-for="event in feedbackreqs" :key="event.event_id" class="fb-event">
+    <div v-for="event in this.$store.state.userFeedbackRequired" :key="event.event_id" class="fb-event">
       <span ttl>{{ event.event_title }}</span>
       <span>{{ event.event_day }}</span>
       <button>Leave Feedback</button>
@@ -15,25 +15,9 @@
 <script>
 export default {
     mounted(){
-      //check if any previous events need feedback leaving for them
-      this.$store.state.userSignups.forEach(signup =>{
-        let feedbackNeeded = true;
-        //check if this event has already been fedback on by the user
-        this.$store.state.userFeedbackHistory.forEach(item =>{
-          if (item.event_id == signup.event_id){
-              feedbackNeeded = false
-          }
-        });
-        if(feedbackNeeded && signup.historical == 'True'){
-          this.feedbackreqs.push(signup);
-        }
-      });
     },
 
     data(){
-      return{
-        feedbackreqs:[]
-      }
     }
 }
 </script>
@@ -60,13 +44,7 @@ export default {
     align-items: center;
     gap:1rem;
     
-    button{
-      transition:all 300ms ease;
-      &:hover{
-        background:var(--nc-blue);
-        color:white;
-      }
-    }
+
 
     span[ttl]{
       flex-grow: 1;
