@@ -26,6 +26,7 @@
 //imports scripts
 import axios from "axios";
 import store from "./store";
+import methods from "./assets/methods";
 
 //componen imports
 import mainTopBar from "./components/Main/main-topBar.vue";
@@ -43,10 +44,8 @@ export default {
   methods: {
     //main dataLoad
     async refreshEventData() {
-      await axios
-        .post(store.state.endpointURL + "evsDataStream", {
-          contentType: "application/json",
-        })
+      methods
+        .reqNP("evsDataStream")
         .then((res) => {
           //console.log(JSON.parse(res.data.d));
           let eventDataSource = JSON.parse(res.data.d);
@@ -59,9 +58,7 @@ export default {
           store.state.curUser = eventDataSource.logged_on_user;
           store.state.nextMonths = eventDataSource.nextMonths;
 
-          this.populatedFeedbackHistory(
-            eventDataSource.userSignups
-          );
+          this.populatedFeedbackHistory(eventDataSource.userSignups);
 
           store.state.userGeneralFeedback = eventDataSource.userFeedbackHistory;
 
@@ -85,44 +82,37 @@ export default {
 
     //fetch user settings
     async fetchUserSettings() {
-      await axios
-        .post("https://ashypls.com/eventsbooking/data/userSettings", {
-          contentType: "application/json",
-        })
-        .then((response) => {
-          if (response.data.d != null) {
-            store.state.userSettings = JSON.parse(
-              JSON.parse(response.data.d)[0]
-            );
-            //update the filters/displays
-            store.state.pagingPageSize = store.state.userSettings.pageSize;
-            store.state.viewMode = store.state.userSettings.viewMode;
-          }
-        });
+      methods.reqNP("userSettings").then((response) => {
+        if (response.data.d != null) {
+          store.state.userSettings = JSON.parse(JSON.parse(response.data.d)[0]);
+          //update the filters/displays
+          store.state.pagingPageSize = store.state.userSettings.pageSize;
+          store.state.viewMode = store.state.userSettings.viewMode;
+        }
+      });
     },
 
     //refresh user settings
     async syncUserSettings() {
-      await axios.post("https://ashypls.com/eventsbooking/data/syncSettings", {
-        contentType: "application/json",
-        settingsJson: JSON.stringify(store.state.userSettings),
-      });
+      methods.reqOP(
+        "syncSettings",
+        "settingsJson",
+        JSON.stringify(store.state.userSettings)
+      );
     },
 
     //calendar load
     async loadCalendarView() {
       let monthNumber = store.state.selectedMonthNumber;
 
-      await axios
-        .post("https://ashypls.com/eventsbooking/data/evsCalendarView", {
-          contentType: "application/json",
-          month: monthNumber,
-        })
+      methods
+        .reqOP("evsCalendarView", "month", monthNumber)
         .then((response) => {
           store.state.calenderView = JSON.parse(response.data.d);
         });
     },
 
+    //separate out the user signups
     populatedFeedbackHistory(signups) {
       let _userSignupsHistory = [];
       let _userSignupsFuture = [];
@@ -130,7 +120,6 @@ export default {
       let _feedback_req = [];
 
       signups.forEach((signup) => {
-
         //previous signups WITH feedback
         if (signup.feedback_id && signup.historical == "True") {
           _feedback.push(signup);
@@ -140,17 +129,15 @@ export default {
         if (signup.historical == "True") {
           _userSignupsHistory.push(signup);
         } else {
+          //this is an event that hasnt happened yet
           _userSignupsFuture.push(signup);
         }
 
         //previous events WITHOUT feedback
-        if (!signup.feedback_id && signup.historical == 'True'){
+        if (!signup.feedback_id && signup.historical == "True") {
           _feedback_req.push(signup);
         }
-
       });
-
-
 
       store.state.userSignupHistory = _userSignupsHistory;
       store.state.userSignupFuture = _userSignupsFuture;
